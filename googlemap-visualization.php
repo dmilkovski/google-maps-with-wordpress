@@ -18,7 +18,61 @@ class GoogleMapVisualization {
 
     add_action ('admin_init', array ($this, 'register_custom_fileds'));
     add_action ('save_post', array ($this, 'save_details'));
+
+    add_shortcode( 'places_map', array ($this, 'places_map_func') );
   }
+  //short code init [places_map]
+  function places_map_func () {
+  	$query_data = new WP_Query(array('post_type' => 'place'));
+  	$counter = 0;
+  	$point_data = array ();	  	
+  	while ($query_data->have_posts()) : $query_data->the_post();
+  		$latitude = get_post_custom_values('latitude_filed');
+  		$longitude = get_post_custom_values('longitude_filed');
+  		$point_data[$counter]['latitude'] = $latitude[0];
+  		$point_data[$counter]['longitude'] = $longitude[0];
+  		$counter++;
+  	endwhile;
+  	$jsonData = json_encode($point_data);
+  	?>
+  	
+
+  	<style type="text/css">
+  		#map-canvas { width:604px; height:318px; margin: 0; padding: 0;}
+    </style>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCi9JuJgDzZa7H6t4ImiN2V7gGqs7TraX8">
+    </script>
+    <script type="text/javascript">
+      function initialize() {
+        var mapOptions = {
+          center: { lat: 42.733883, lng: 25.485830},
+          zoom: 5
+        };
+
+        var map = new google.maps.Map(document.getElementById('map-canvas'),
+            mapOptions);
+
+        var pointsJson = <?php echo $jsonData; ?>, marker;
+        //add markers on the map
+        for (var i = 0; i < pointsJson.length; i++)
+        {
+        	marker = new google.maps.Marker ({
+        		position: new google.maps.LatLng (pointsJson[i].latitude, pointsJson[i].longitude),
+        		map: map
+        	});
+        }
+        
+        
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+	<div id="map-canvas"></div>
+	<?php
+  	return '';
+  }
+
+  //end short code init
 
   //register data types in WP
   public function register_gpm_post() {
