@@ -145,28 +145,6 @@ class GoogleMapVisualization {
 	  update_post_meta($post->ID, "longitude_filed", $_POST["longitude_filed"]);
 
   }
-
-  public function map () {
-  	?>
-  	<style type="text/css">
-  	#map-canvas { width:604px; height:318px; margin: 0; padding: 0;}
-    </style>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCi9JuJgDzZa7H6t4ImiN2V7gGqs7TraX8"></script>
-    <script type="text/javascript">
-
-      function initialize() {
-        var mapOptions = {
-          center: { lat: -34.397, lng: 150.644},
-          zoom: 8
-        };
-        var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-      }
-      google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
-	<div id="map-canvas"></div>
-  	<?php
-  }
-
 }
 
 new GoogleMapVisualization();
