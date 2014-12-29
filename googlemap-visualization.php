@@ -23,7 +23,7 @@ class GoogleMapVisualization {
   }
   //short code init [places_map]
   function places_map_func () {
-  	$query_data = new WP_Query(array('post_type' => 'place'));
+  	$query_data = new WP_Query(array('post_type' => 'place', 'posts_per_page'=>-1));
   	$counter = 0;
   	$point_data = array ();	  	
   	while ($query_data->have_posts()) : $query_data->the_post();
